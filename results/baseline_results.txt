@@ -1,0 +1,26 @@
+Dataset:
+BCI Competition IV Dataset 2a
+
+Preprocessing:
+- Band-pass filter: 8-30 Hz
+- CSP feature extraction
+- SVM classifier
+
+Number of EEG channels:
+22
+
+Classes:
+7: Left
+8: Right
+9: Forward (Feet)
+10: Stop (Tongue)
+
+Results:
+Accuracy: 77.59%
+
+5-Fold Cross Validation:
+Mean accuracy: 77.05%
+Standard deviation: 4.19%
+
+CSP components:
+8
