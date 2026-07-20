@@ -1,0 +1,16 @@
+# Virtual environment
+eeg_venv/
+
+# EEG datasets
+data/
+*.gdf
+*.mat
+
+# Models
+models/
+*.pkl
+*.joblib
+
+# Python cache
+__pycache__/
+.ipynb_checkpoints/
