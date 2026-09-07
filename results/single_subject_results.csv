@@ -1,0 +1,14 @@
+sep=,
+experiment,classifier,csp_components,protocol,accuracy_pct
+CSP sweep,SVM linear,2,5-fold CV,74.33
+CSP sweep,SVM linear,4,5-fold CV,79.16
+CSP sweep,SVM linear,6,5-fold CV,78.12
+CSP sweep,SVM linear,8,5-fold CV,80.20
+CSP sweep,SVM linear,10,5-fold CV,82.63
+CSP sweep,SVM linear,12,5-fold CV,82.97
+CSP sweep,SVM linear,16,5-fold CV,80.54
+classifier comparison,LDA,6,single 80/20 split,62.07
+classifier comparison,SVM linear,6,single 80/20 split,74.14
+classifier comparison,LDA,10,single 80/20 split,70.69
+classifier comparison,Random Forest,10,single 80/20 split,72.41
+classifier comparison,SVM GridSearchCV,10,single 80/20 split,75.86

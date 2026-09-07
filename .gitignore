@@ -1,16 +1,24 @@
 # Virtual environment
 eeg_venv/
+venv/
+.venv/
 
-# EEG datasets
+# EEG datasets (not redistributed — see README for download instructions)
 data/
 *.gdf
 *.mat
 
-# Models
-models/
+# Generated model artifacts (export_model.py itself IS tracked — only its output is ignored)
 *.pkl
 *.joblib
 
 # Python cache
 __pycache__/
+*.pyc
 .ipynb_checkpoints/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

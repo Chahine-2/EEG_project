@@ -1,0 +1,20 @@
+# Core EEG processing
+mne>=1.5
+
+# Numerical / scientific computing
+numpy>=1.24
+scipy>=1.11
+
+# Machine learning
+scikit-learn>=1.3
+joblib>=1.3
+
+# Deep learning (EEGNet, notebook 05)
+torch>=2.0
+
+# Plotting
+matplotlib>=3.7
+
+# Jupyter
+jupyter>=1.0
+notebook>=7.0

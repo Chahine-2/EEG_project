@@ -1,0 +1,23 @@
+sep=,
+experiment,factor,setting,accuracy_pct,std_pct
+basic LOSO,csp_components,16,31.40,6.77
+csp sweep,csp_components,4,32.10,8.56
+csp sweep,csp_components,6,32.29,8.10
+csp sweep,csp_components,8,30.52,6.66
+csp sweep,csp_components,12,30.94,6.35
+csp sweep,csp_components,16,30.67,6.49
+classifier comparison,classifier,LDA,38.31,11.04
+classifier comparison,classifier,SVM linear,37.96,11.79
+classifier comparison,classifier,SVM RBF,32.29,8.10
+regularization,reg_method,none,38.31,11.04
+regularization,reg_method,ledoit_wolf,38.31,11.04
+regularization,reg_method,oas,38.31,11.04
+frequency band,band,4-30Hz,36.61,12.06
+frequency band,band,8-30Hz,38.31,11.04
+frequency band,band,8-35Hz,38.27,10.90
+frequency band,band,8-40Hz,37.89,11.49
+time window,window,0-2s,38.89,10.64
+time window,window,0-3s,41.44,14.40
+time window,window,0-4s,38.31,11.04
+time window,window,1-3s,40.90,13.49
+time window,window,1-4s,38.12,13.56

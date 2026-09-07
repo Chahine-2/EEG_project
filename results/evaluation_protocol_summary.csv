@@ -1,0 +1,6 @@
+sep=,
+protocol,accuracy_pct,description
+single-subject same-session,83.0,best CSP+SVM config on subject A01 only
+cross-session same-subject,56.75,train A0xT test A0xE per subject averaged
+cross-subject LOSO,38.31,best classical config (CSP+LDA) LOSO across 9 subjects
+subject adaptation 20pct,58.30,LOSO + 20% target subject data included in training

@@ -1,198 +1,141 @@
-# EEG-Based Motor Imagery Classification
+# EEG-Based Motor Imagery Classification for BCI Object Control
 
-## Project Overview
+Classifying motor imagery tasks (left hand, right hand, foot, tongue) from EEG,
+as a foundation for a future Brain-Computer Interface (BCI) capable of
+controlling an external object. This repo documents the full arc from a
+single-subject baseline through a systematic investigation of why
+cross-subject generalization is hard, and what actually helps.
 
-This project investigates the classification of **motor imagery (MI) EEG signals** using the **BCI Competition IV Dataset 2a**.
-
-The objective is to decode imagined movements from EEG recordings and evaluate classical machine learning approaches under both:
-
-- Single-subject settings
-- Multi-subject settings
-
-The study follows a conventional EEG decoding pipeline consisting of:
-
-1. EEG preprocessing
-2. Feature extraction using **Common Spatial Pattern (CSP)**
-3. Classification using **Linear Discriminant Analysis (LDA)** and **Support Vector Machines (SVMs)**
-
+**Status:** Core investigation complete. Subject adaptation identified as the
+most promising direction; real-time / hardware integration not yet started.
 
 ---
 
-# Dataset
+## TL;DR — What This Project Found
 
-## BCI Competition IV Dataset 2a
-
-The dataset contains EEG recordings from **9 healthy subjects** performing four different motor imagery tasks.
-
-### Dataset Characteristics
-
-| Property | Value |
+| Question | Answer |
 |---|---|
-| Subjects | 9 (A01-A09) |
-| EEG Channels | 22 |
-| Sampling Frequency | 250 Hz |
-| Trials per Subject | 288 |
-| Trials per Class | 72 |
-| Motor Imagery Classes | Left Hand, Right Hand, Foot, Tongue |
+| Can we classify one person's motor imagery well? | **Yes — 83.0%** (chance = 25%) |
+| Does that transfer to a person the model has never seen? | **No — 38.3%** best case (LOSO) |
+| Is that gap about signal processing (features/classifiers)? | **Mostly no** — a full sweep barely moved it |
+| Is it about *when* the data was recorded (different day)? | **Partly** — same subject, different day: 56.75% |
+| Is it about *who* the data came from? | **Yes, dominant factor** |
+| What actually helps close the gap? | **A little of the target person's own data** — even 20% lifts accuracy by +7.6pp and makes results more consistent |
 
-> Note: The original `.gdf` files are not included in this repository.  
-> Download the dataset from the official BCI Competition IV website and place the files inside the `data/` directory.
+See [`results/evaluation_protocol_summary.csv`](results/evaluation_protocol_summary.csv) for the four headline numbers in one place, or the full report in [`docs/`](docs/) for the complete story.
 
+## Dataset
 
----
+- **Source:** [BCI Competition IV, Dataset 2a](https://www.bbci.de/competition/iv/#dataset2a)
+- **9 subjects**, 22 EEG channels, 250 Hz, 4 balanced classes (Left Hand / Right Hand / Foot / Tongue), 288 trials/subject/session
+- Not included in this repo (see [Data](#data) below)
 
-# Processing Pipeline
+## Repository Structure
 
-## 1. EEG Preprocessing
-
-- Band-pass filtering: **8-30 Hz**
-- Epoch extraction: **0-4 seconds**
-- EEG channel selection
-
-## 2. Feature Extraction
-
-**Common Spatial Pattern (CSP)** is used to extract discriminative spatial features from EEG signals.
-
-## 3. Classification
-
-The following classifiers were evaluated:
-
-- Linear Discriminant Analysis (LDA)
-- Linear Support Vector Machine (Linear SVM)
-- Radial Basis Function Support Vector Machine (RBF SVM)
-
-
----
-
-# Single-Subject Experiment
-
-The baseline experiment was performed using:
-
-**Subject: A01 (A01T.gdf)**
-
-
-## Results
-
-| Method | CSP Components | Accuracy |
-|---|---:|---:|
-| CSP + LDA | 10 | 70.69% |
-| CSP + Linear SVM | 12 | **83.00%** |
-| CSP + RBF SVM | 10 | Lower performance |
-
-
-## Best Configuration
-
-| Parameter | Value |
-|---|---|
-| Subject | A01 |
-| Feature Extraction | CSP |
-| CSP Components | 12 |
-| Classifier | Linear SVM |
-| Accuracy | **83.00%** |
-
-
----
-
-# Multi-Subject Experiment
-
-A pooled experiment was performed using data from:
-
-**Subjects A01-A09**
-
-
-## Experimental Setup
-
-| Parameter | Value |
-|---|---|
-| Total Trials | 3312 |
-| Training Set | 2649 |
-| Test Set | 663 |
-| Train/Test Split | 80/20 Stratified |
-| Feature Extraction | CSP |
-| Classifier | RBF SVM |
-| C Value | 10 |
-
-
-## Results
-
-| CSP Components | Classifier | Accuracy |
-|---:|---|---:|
-| 4 | RBF SVM | 47.96% |
-| 6 | RBF SVM | 54.60% |
-| 8 | RBF SVM | 57.62% |
-| 12 | RBF SVM | 62.44% |
-| 16 | RBF SVM | **65.31%** |
-
-
-## Best Configuration
-
-| Parameter | Value |
-|---|---|
-| Subjects | A01-A09 |
-| CSP Components | 16 |
-| Classifier | RBF SVM |
-| Accuracy | **65.31%** |
-
-
----
-
-# Discussion
-
-The experimental results demonstrate a clear difference between **single-subject** and **multi-subject** motor imagery classification.
-
-For the single-subject experiment, the highest performance (**83.00%**) was achieved using **12 CSP components** and a **Linear SVM** classifier.
-
-Performance stabilized around 10-12 CSP components, showing that a compact feature space was sufficient for modeling one individual's EEG patterns.
-
-The multi-subject experiment was more challenging because of inter-subject variability caused by:
-
-- Different brain structures
-- Different neural activity patterns
-- Electrode placement differences
-
-Increasing CSP components from 4 to 16 improved the accuracy from **47.96%** to **65.31%**, showing that additional spatial information helps when combining multiple subjects.
-
-
----
-
-# Current Best Results
-
-| Experiment | CSP Components | Classifier | Accuracy |
-|---|---:|---|---:|
-| Single Subject (A01) | 12 | Linear SVM | **83.00%** |
-| Multi Subject (A01-A09) | 16 | RBF SVM (C=10) | **65.31%** |
-
-
----
-
-# Future Work
-
-Future experiments will investigate:
-
-- Linear SVM on multi-subject data
-- Complete LDA CSP component evaluation
-- Higher CSP component numbers
-- SVM hyperparameter optimization
-- Subject-independent normalization techniques
-- Deep learning approaches:
-  - EEGNet
-  - ShallowConvNet
-  - DeepConvNet
-- Transfer learning and domain adaptation methods
-
-
----
-
-# Repository Structure
-
-```text
-EEG_project/
-
-├── notebooks/        # Jupyter notebooks
-├── src/              # Source code
-├── models/           # Saved models (optional)
-├── results/          # Figures and evaluation results
-├── requirements.txt  # Python dependencies
-├── README.md
-└── .gitignore
 ```
+eeg-motor-imagery/
+├── README.md
+├── requirements.txt
+├── .gitignore
+├── notebooks/
+│   ├── 01_single_subject.ipynb                     # baseline: CSP + LDA/SVM, 83.0%
+│   ├── 02_multi_subject_baseline_optimization.ipynb # LOSO + CSP/classifier/reg/band/window sweep
+│   ├── 03_subject_normalization.ipynb              # per-subject StandardScaler test
+│   ├── 04_feature_extraction_comparison.ipynb      # FBCSP vs. plain CSP
+│   ├── 05_EEGNet_LOSO.ipynb                        # deep learning baseline
+│   ├── 06_subject_adaptation_LOSO.ipynb            # train on 8 subjects + X% of target
+│   ├── 07_cross_session_A01.ipynb                  # single-subject, cross-day
+│   ├── 08_cross_session_all_subjects.ipynb         # cross-day, all 9 subjects
+│   └── debug/
+│       └── A04T_investigation.ipynb                # root-caused the class-imbalance bug
+├── src/
+│   └── data_loading.py          # shared, correct event-loading logic (see Data Integrity Fix)
+├── models/
+│   ├── export_model.py                          # trains + saves the best config
+│   └── single_subject_A01_csp12_svm.joblib      # generated by export_model.py
+├── results/
+│   ├── evaluation_protocol_summary.csv
+│   ├── single_subject_results.csv
+│   ├── multi_subject_loso_results.csv
+│   ├── per_subject_loso_breakdown.csv
+│   ├── feature_method_comparison.csv
+│   ├── subject_adaptation_results.csv
+│   └── subject_adaptation_per_subject.csv
+├── docs/
+│   ├── EEG_Internship_Progress_Report.docx      # full write-up, all sections below
+│   ├── EEG_Internship_Progress.pptx             # 12-slide presentation
+│   └── presentation_speech.md
+└── data/                         # gitignored — see Data section
+```
+
+## Methodology, in order
+
+1. **Single-subject baseline** — GDF load → 8-30Hz filter → 0-4s epochs → CSP → LDA/SVM. Best: 83.0% (12 CSP components, linear SVM, 5-fold CV).
+2. **Multi-subject pooling + LOSO** — pooled all 9 subjects, evaluated with Leave-One-Subject-Out (train on 8, test on the unseen 9th).
+3. **Data integrity fix** — found and root-caused a class-imbalance bug (see below), fixed it, and confirmed the fix with a re-run.
+4. **Optimization sweep** — CSP components, classifier type, CSP regularization, frequency band, epoch window — tested independently under LOSO.
+5. **Alternative features** — Filter-Bank CSP (6 sub-bands) as an alternative to plain CSP.
+6. **Deep learning baseline** — EEGNet under the same LOSO protocol.
+7. **Subject adaptation** — train on 8 subjects + an increasing slice (0/5/10/20%) of the target subject's own data, test on their separate evaluation session.
+8. **Cross-session evaluation** — train and test on the *same* subject, different day, to isolate day-to-day variability from cross-subject variability.
+
+## The Data Integrity Bug (worth knowing about)
+
+An earlier version of the pooled dataset had an unexplained class imbalance (2,448 trials instead of 2,592). Investigation (`notebooks/debug/A04T_investigation.ipynb`) showed subject A04T's raw file was actually fine — 72 balanced trials per class. The real cause: the loading code assumed a **fixed numeric event code** per class, but MNE assigns those numbers *per file*, and A04T's file happened to shift them. The fix — implemented in `src/data_loading.py` — looks up each event by its description string instead of assuming a fixed number.
+
+**Proof the fix mattered:** A04T's own LOSO accuracy moved from 17.4% (below chance, worst subject) to 25.0% (at chance, no longer an outlier).
+
+## Key Results
+
+**Single-subject (ceiling):** 83.0% — see `results/single_subject_results.csv`
+
+**Multi-subject LOSO optimization sweep** (corrected, balanced dataset):
+
+| Factor | Best setting | Best accuracy | Effect |
+|---|---|---|---|
+| CSP components | 6 | 32.29% | small |
+| Classifier | LDA | 38.31% | moderate — LDA beats SVM here, unlike single-subject |
+| Regularization | no difference | 38.31% | none |
+| Frequency band | 8-30 Hz | 38.31% | small |
+| Epoch window | 0-3s | 41.44% | largest single factor |
+
+**Alternative methods** (all underperform or match tuned CSP+LDA):
+
+| Method | Accuracy |
+|---|---|
+| CSP + LDA | 38.31% |
+| CSP + Normalization + LDA | 40.90% |
+| FBCSP + LDA | 37.23% |
+| EEGNet | 38.81% |
+
+**The two findings that actually matter:**
+
+- **Cross-session ≫ cross-subject.** Same subject, different day: **56.75%**. Different subject entirely: **38.31%**. This is strong evidence that *who* the data comes from matters far more than *when* it was recorded.
+- **Subject adaptation works.** Adding just 20% of a target subject's own data to training lifts accuracy from 50.73% to **58.30%** — and reduces the spread across subjects (std drops from 14.82% to 11.98%). Full breakdown in `results/subject_adaptation_results.csv`.
+
+## Data
+
+Raw `.gdf`/`.mat` files are not included. Download from the [official dataset page](https://www.bbci.de/competition/iv/#dataset2a) and place under `data/BCI_IV_2a/`.
+
+## Setup
+
+```bash
+python -m venv venv
+source venv/bin/activate      # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+jupyter notebook
+```
+
+To regenerate the final model artifact:
+```bash
+cd models
+python export_model.py
+```
+
+## Next Steps
+
+- [ ] Isolate cross-session vs. cross-subject effects within the subject-adaptation protocol
+- [ ] Combine the 0-3s window finding with subject adaptation
+- [ ] Investigate why A02/A05 underperform across nearly every method
+- [ ] Extend the command-mapping prototype toward real-time control
+- [ ] Revisit EEGNet if a larger/augmented dataset becomes available

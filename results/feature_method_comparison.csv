@@ -1,0 +1,6 @@
+sep=,
+method,accuracy_pct
+CSP + LDA,38.31
+CSP + Normalization + LDA,40.90
+FBCSP + LDA,37.23
+EEGNet,38.81

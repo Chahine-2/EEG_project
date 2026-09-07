@@ -1,0 +1,6 @@
+sep=,
+target_data_pct,mean_accuracy_pct,std_pct,mean_macro_f1,improvement_pp
+0,50.73,14.82,0.4737,0.00
+5,50.77,14.69,0.4682,0.04
+10,54.19,13.63,0.5246,3.46
+20,58.30,11.98,0.5704,7.56
